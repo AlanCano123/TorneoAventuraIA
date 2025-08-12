@@ -1,6 +1,7 @@
 # Aventura Interactiva
 
 Aplicación web que permite a un usuario crear y vivir una historia interactiva generada dinámicamente. El usuario configura parámetros iniciales, la aplicación genera una historia inicial y una imagen asociada. Luego, el usuario puede avanzar la historia seleccionando entre opciones que el sistema ofrece, con nuevas imágenes y actualizaciones de la trama. Al finalizar la aventura, se puede descargar un resumen en PDF, escuchar una narración y reiniciar la historia para comenzar de nuevo.
+DEMO: https://www.youtube.com/watch?v=vrIoScIsiD0
 
 ---
 
