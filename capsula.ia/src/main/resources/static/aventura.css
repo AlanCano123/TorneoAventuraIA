@@ -1,0 +1,114 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    position: relative;
+    color: #f1e2c6;
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* Contenedor principal */
+.container {
+    background: rgba(255, 248, 220, 0.95) url('pergamino-textura.png') repeat;
+    border: 4px solid #8b5e3c;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    padding: 2rem 2rem 3rem;
+    max-width: 900px;
+    margin-top: 2rem;
+    color: #4b2e16;
+    font-family: 'Cinzel', serif;
+}
+
+/* Título */
+h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #5c3b1e;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+/* Historia */
+#historia {
+    background: #fff8e7;
+    border-radius: 10px;
+    min-height: 180px;
+    padding: 1rem 1.5rem;
+    color: #5c3b1e;
+    box-shadow: inset 0 0 15px rgba(139, 94, 60, 0.7);
+    font-size: 1.1rem;
+    font-family: 'MedievalSharp', cursive;
+    margin-bottom: 1.5rem;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+/* Contenedor de la imagen con fondo (marco) */
+#imagen-contenedor {
+    background: url('fondo-imagen.jpg') no-repeat center center;
+    background-size: contain;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    max-width: 360px;
+    margin: 0 auto 1.5rem auto;
+    text-align: center;
+    position: relative;
+}
+
+/* Imagen del guerrero encima del fondo */
+#imagen {
+    max-height: 280px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+}
+
+/* Botones */
+button.btn {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease, transform 0.15s ease;
+}
+button.btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+/* Opciones estilo lista */
+#opciones .list-group-item {
+    cursor: pointer;
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    background-color: #f7f0d8;
+    color: #5c3b1e;
+    font-family: 'MedievalSharp', cursive;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+#opciones .list-group-item:hover {
+    background-color: #d1b675;
+    color: #3f2a0b;
+}
+
+/* Área final con botones */
+#accionesFinales {
+    margin-top: 2rem;
+    color: #5c3b1e;
+}

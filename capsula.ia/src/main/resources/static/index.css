@@ -1,0 +1,124 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: -1;
+}
+
+/* Título estilo RPG */
+h1 {
+    font-family: 'Cinzel', serif;
+    color: #f1e2c6;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    text-align: center;
+    animation: fadeIn 1s ease forwards;
+}
+
+/* Texto narrador */
+.intro-text {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.2rem;
+    color: #f8f3dc;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    animation: fadeIn 4s ease forwards;
+}
+
+/* Formulario en pergamino */
+.card {
+    background: rgba(255, 248, 220, 0.95) url('pergamino-textura.jpg') repeat;
+    border: 4px solid #8b5e3c;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    animation: fadeIn 1.5s ease forwards;
+}
+
+/* Labels */
+.form-label {
+    font-family: 'Cinzel', serif;
+    color: #4b2e16;
+    font-weight: bold;
+}
+
+/* Inputs */
+.form-control {
+    border: 2px solid #8b5e3c;
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.9);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 8px #d4a373;
+    border-color: #d4a373;
+}
+
+/* Animación campos */
+.mb-3 {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInField 0.6s ease forwards;
+}
+.mb-3:nth-child(1) { animation-delay: 0.2s; }
+.mb-3:nth-child(2) { animation-delay: 0.4s; }
+.mb-3:nth-child(3) { animation-delay: 0.6s; }
+.mb-3:nth-child(4) { animation-delay: 0.8s; }
+.mb-3:nth-child(5) { animation-delay: 1.0s; }
+.mb-3:nth-child(6) { animation-delay: 1.2s; }
+
+@keyframes slideInField {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Botón */
+.button_slide {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background-color: #5c3b1e;
+    border: 2px solid #8b5e3c;
+    padding: 15px 30px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Cinzel', serif;
+    border-radius: 8px;
+}
+
+.button_slide::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.2);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+.button_slide:hover {
+    background-color: #7a4d28;
+}
+.button_slide:hover::after {
+    left: 100%;
+}
+
+/* Fade in general */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}

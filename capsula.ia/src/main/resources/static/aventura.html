@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aventura Interactiva</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:
+              url('fondo5.jpg') left center / 50% 100% no-repeat,
+              url('fondo6.jpg') right center / 50% 100% no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
+      color: #f1e2c6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+
+
+    .container {
+      background: rgba(255, 248, 220, 0.95) url('pergamino-textura.jpg') repeat;
+      border: 4px solid #8b5e3c;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      padding: 2rem 2rem 3rem;
+      max-width: 900px;
+      margin-top: 2rem;
+      color: #4b2e16;
+      font-family: 'Cinzel', serif;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 2.8rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #5c3b1e;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+
+    #historia {
+      background: #fff8e7;
+      border-radius: 10px;
+      min-height: 180px;
+      padding: 1rem 1.5rem;
+      color: #5c3b1e;
+      box-shadow: inset 0 0 15px rgba(139, 94, 60, 0.7);
+      font-size: 1.1rem;
+      font-family: 'MedievalSharp', cursive;
+      margin-bottom: 1.5rem;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 250px;
+    }
+    #imagen-contenedor {
+      background: url('fondo-imagen.png') no-repeat center center;
+      background-size: 100% 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      width: 400px;
+      height: 500px;
+      margin: 0 auto 1.5rem auto;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    #imagen {
+      max-height: 80%; /* para que no tape todo el fondo */
+      max-width: 80%;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    button.btn {
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, transform 0.15s ease;
+    }
+    button.btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    #opciones .list-group-item {
+      cursor: pointer;
+      border-radius: 10px;
+      margin-bottom: 0.6rem;
+      background-color: #f7f0d8;
+      color: #5c3b1e;
+      font-family: 'MedievalSharp', cursive;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    #opciones .list-group-item:hover {
+      background-color: #d1b675;
+      color: #3f2a0b;
+    }
+
+    #accionesFinales {
+      margin-top: 2rem;
+      color: #5c3b1e;
+    }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Tu Aventura</h1>
+
+  <div id="historia" class="card p-3 shadow mb-3"></div>
+
+  <div id="imagen-contenedor" class="text-center mb-4">
+    <img id="imagen" alt="Imagen generada" style="display:none;" />
+  </div>
+
+
+  <div class="d-flex justify-content-center mb-4">
+    <button id="btnOpciones" class="btn btn-info">Obtener Opciones</button>
+  </div>
+
+
+  <div id="opciones" class="list-group mb-4"></div>
+
+  <div id="accionesFinales" class="text-center mt-4" style="display:none;">
+    <button id="btnResumen" class="btn btn-success me-2">Descargar Resumen PDF</button>
+    <button id="btnAudio" class="btn btn-warning" style="display:none;">Reproducir Audio</button>
+    <button id="btnReiniciar" class="btn btn-danger ms-2" style="display:none;">Reiniciar Aventura</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  let ultimoTurno = null;
+  let imagenFinalGenerada = false;
+  let cargandoHistoria = false;
+  let ultimaGeneracion = 0;
+
+  async function cargarHistoria() {
+    if (cargandoHistoria) return;
+    cargandoHistoria = true;
+    try {
+      const resp = await fetch('/api/aventura/estado');
+      if (!resp.ok) throw new Error(`Error HTTP: ${resp.status}`);
+
+      const data = await resp.json();
+      document.getElementById('historia').innerText = data.historiaAcumulada;
+
+      if (data.finalizada) {
+        if (!imagenFinalGenerada) {
+          await generarYMostrarImagen();
+          imagenFinalGenerada = true;
+        }
+      } else {
+        imagenFinalGenerada = false;
+        if (ultimoTurno !== data.turnoActual) {
+          ultimoTurno = data.turnoActual;
+          await generarYMostrarImagen();
+        }
+      }
+
+      if (data.finalizada) {
+        document.getElementById('accionesFinales').style.display = 'block';
+        document.getElementById('btnImagen').disabled = true;
+        document.getElementById('btnOpciones').disabled = true;
+        document.getElementById('opciones').innerHTML =
+                '<div class="text-muted text-center">La aventura ha terminado 🎉</div>';
+      } else {
+        document.getElementById('accionesFinales').style.display = 'none';
+        document.getElementById('btnImagen').disabled = false;
+        document.getElementById('btnOpciones').disabled = false;
+      }
+
+    } catch (err) {
+      console.error("Error al cargar historia:", err);
+    } finally {
+      cargandoHistoria = false;
+    }
+  }
+
+  async function generarYMostrarImagen() {
+    const ahora = Date.now();
+    if (ahora - ultimaGeneracion < 5000) return;
+    ultimaGeneracion = ahora;
+    const respImg = await fetch('/api/aventura/imagen', { method: 'POST' });
+    if (respImg.ok) {
+      const blob = await respImg.blob();
+      const imgURL = URL.createObjectURL(blob);
+      const img = document.getElementById('imagen');
+      if (img.src !== imgURL) {
+        img.src = imgURL;
+        img.style.display = 'block';
+      }
+    }
+  }
+  async function refrescarHistoria() {
+    if (cargandoHistoria) return;
+    cargandoHistoria = true;
+    await cargarHistoria();
+    cargandoHistoria = false;
+  }
+  refrescarHistoria();
+  setInterval(refrescarHistoria, 2000);
+
+  document.getElementById('btnOpciones').addEventListener('click', async () => {
+    const resp = await fetch('/api/aventura/opciones', { method: 'POST' });
+    if (resp.ok) {
+      const opciones = await resp.json();
+      const cont = document.getElementById('opciones');
+      cont.innerHTML = '';
+      opciones.forEach(op => {
+        const btn = document.createElement('button');
+        btn.classList.add('list-group-item', 'list-group-item-action');
+        btn.textContent = op;
+        btn.onclick = async () => {
+          cont.innerHTML = '';
+          await fetch('/api/aventura/continuar', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(op)
+          });
+          cargarHistoria();
+        };
+        cont.appendChild(btn);
+      });
+    }
+  });
+  document.getElementById('btnReiniciar').addEventListener('click', async () => {
+    try {
+      const resp = await fetch('/api/aventura/reset', { method: 'POST' });
+      if (!resp.ok) throw new Error(`Error HTTP: ${resp.status}`);
+      window.location.href = 'index.html';
+    } catch (error) {
+      alert('No se pudo reiniciar la aventura. Por favor, inténtalo de nuevo.');
+      console.error(error);
+    }
+  });
+
+  document.getElementById('btnResumen').addEventListener('click', async () => {
+    try {
+      const response = await fetch('/api/aventura/resumenEscrito');
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const resumenTexto = await response.text();
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(16);
+      doc.text("Resumen de la Aventura", 105, 20, { align: "center" });
+      doc.setFontSize(12);
+
+      const margenIzquierdo = 20;
+      const margenSuperior = 30;
+      const anchoTexto = 170;
+      const lineas = doc.splitTextToSize(resumenTexto, anchoTexto);
+
+      doc.text(lineas, margenIzquierdo, margenSuperior);
+
+      doc.save("resumen-aventura.pdf");
+      alert('¡El PDF ha sido generado y descargado exitosamente!');
+
+      // Mostrar ambos botones después de descargar
+      document.getElementById('btnAudio').style.display = 'inline-block';
+      document.getElementById('btnReiniciar').style.display = 'inline-block';
+
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Hubo un error al generar el resumen. Por favor, inténtelo de nuevo.");
+    }
+  });
+
+
+  document.getElementById('btnAudio').addEventListener('click', async () => {
+    const resp = await fetch('/api/aventura/audio', { method: 'POST' });
+    if (resp.ok) {
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.play();
+    }
+  });
+
+  cargarHistoria();
+  setInterval(cargarHistoria, 2000);
+
+</script>
+</body>
+</html>

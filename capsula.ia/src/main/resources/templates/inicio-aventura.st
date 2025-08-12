@@ -1,0 +1,1 @@
+Escribí el comienzo de una historia de {genero} protagonizada por {personajes} personajes. El protagonista principal es: {descripcion}. Todo sucede en {ubicacion}. La historia tendrá {duracion} turnos. No uses saltos de línea ni títulos. Respondé solo con la historia, con un máximo de 200 caracteres.
