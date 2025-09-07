@@ -3,7 +3,7 @@ spring:
     name: capsula.ia
   ai:
     openai:
-      api-key: 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
+      api-key: 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
       embedding:
         options:
           model:
@@ -14,3 +14,5 @@ sfg:
     vectorStorePath: ${java.io.tmpdir}/vectorStore.json
     documentsToLoad:
       - classpath:/megalodon.csv
+
+

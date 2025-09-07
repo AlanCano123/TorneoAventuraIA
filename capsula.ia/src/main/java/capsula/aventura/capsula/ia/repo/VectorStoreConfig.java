@@ -27,9 +27,7 @@ public class VectorStoreConfig {
         if (vectorStoreFile.exists()) {
             store.load(vectorStoreFile);
         } else {
-            log.debug("Loading documents into vector store");
             vectorStoreProperties.getDocumentsToLoad().forEach(document -> {
-                log.debug("Loading document: {}", document.getFilename());
                 TikaDocumentReader documentReader = new TikaDocumentReader(document);
                 List<Document> docs = documentReader.get();
                 TextSplitter textSplitter = new TokenTextSplitter();

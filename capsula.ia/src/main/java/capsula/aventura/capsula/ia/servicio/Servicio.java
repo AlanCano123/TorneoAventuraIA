@@ -20,9 +20,12 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.image.ImageModel;
+
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -70,7 +73,7 @@ public class Servicio {
 
     public byte[] getImagen() {
         SesionAventura sesion = SesionAventura.getInstancia();
-        String prompt = String.format(sesion.getUltimos300Caracteres());
+       /* String prompt = String.format(sesion.getUltimos300Caracteres());
         var options = OpenAiImageOptions.builder()
                 .width(1024)
                 .height(1024)
@@ -81,6 +84,17 @@ public class Servicio {
                 options);
         var imageResponse = imageModel.call(imagePrompt);
         sesion.setImagen(Base64.getDecoder().decode(imageResponse.getResult().getOutput().getB64Json()));
+        */
+        String relativePath = "static/imagen_prueba.jpg";
+
+        try {
+            ClassPathResource resource = new ClassPathResource(relativePath);
+            byte[] imageBytes = resource.getInputStream().readAllBytes();
+            sesion.setImagen(imageBytes);
+
+        } catch (IOException e) {
+            System.err.println("Error al leer la imagen por defecto: " + e.getMessage());
+        }
         return sesion.getImagen();
     }
     public List<String> getOpciones() {
