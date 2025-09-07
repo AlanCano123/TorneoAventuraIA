@@ -2,7 +2,7 @@
 
 Aplicación web que permite a un usuario crear y vivir una historia interactiva generada dinámicamente. El usuario configura parámetros iniciales, la aplicación genera una historia inicial y una imagen asociada. Luego, el usuario puede avanzar la historia seleccionando entre opciones que el sistema ofrece, con nuevas imágenes y actualizaciones de la trama. Al finalizar la aventura, se puede descargar un resumen en PDF, escuchar una narración y reiniciar la historia para comenzar de nuevo.
 DEMO: https://www.youtube.com/watch?v=vrIoScIsiD0
-apiKey: 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
+
 
 ---
 
